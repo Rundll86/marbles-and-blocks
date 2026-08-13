@@ -44,6 +44,10 @@ attack={
 ]
 }
 
+[autoload]
+
+UpgradeState="*res://scripts/upgrade_state.gd"
+
 [physics]
 
 3d/physics_engine="Jolt Physics"

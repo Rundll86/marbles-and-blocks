@@ -52,6 +52,11 @@ func take_damage(amount: float) -> void:
 		_died_emitted = true
 		died.emit()
 
+## 重生：血量回满并重置死亡信号（供 Boss 死亡后重生使用）
+func respawn() -> void:
+	current_health = max_health
+	_died_emitted = false
+
 func _process(delta: float) -> void:
 	var target := get_parent() as Node3D
 	var camera := get_viewport().get_camera_3d()

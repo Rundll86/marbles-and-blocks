@@ -58,11 +58,11 @@ func _input(event: InputEvent) -> void:
 				# 滚轮下滚：拉远
 				distance = clampf(distance + zoom_sensitivity, min_distance, max_distance)
 			MOUSE_BUTTON_LEFT:
-				# 鼠标处于可见状态时，点击左键重新捕获
-				if Input.mouse_mode == Input.MOUSE_MODE_VISIBLE:
+				# 鼠标处于可见状态时，点击左键重新捕获（升级选择期间不抢鼠标）
+				if Input.mouse_mode == Input.MOUSE_MODE_VISIBLE and not UpgradeState.upgrading:
 					Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	elif event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
-		# Esc 释放鼠标
+		# Esc 释放鼠标 
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 func _process(_delta: float) -> void:

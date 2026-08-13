@@ -1,10 +1,10 @@
 extends "res://scripts/bullet.gd"
-## 蓝色子弹：初始 5 伤害，每飞行 1 秒伤害 +20。
+## 蓝色子弹：初始 0 伤害，每飞行 1 秒伤害 +5。
+## 实现为每帧 damage += delta * 5（连续累加，帧率无关），
+## 每秒伤害可叠加升级加成。
 
-var _time_accum: float = 0.0
+func _ready() -> void:
+	damage = 0.0 + UpgradeState.blue_base_damage_bonus
 
 func _on_tick(delta: float) -> void:
-	_time_accum += delta
-	while _time_accum >= 1.0:
-		_time_accum -= 1.0
-		damage += 20.0
+	damage += delta * (5.0 + UpgradeState.blue_dps_bonus)

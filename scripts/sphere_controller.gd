@@ -26,8 +26,8 @@ func _process(delta: float) -> void:
 	position.x -= input.x * move_speed * delta
 	position.y -= input.y * move_speed * delta
 
-	# 单发限制：上一颗子弹未销毁前不能发射
-	if Input.is_action_pressed("attack") and not _has_active_bullet():
+	# 单发限制：上一颗子弹未销毁前不能发射；升级选择期间禁止发射
+	if Input.is_action_pressed("attack") and not _has_active_bullet() and not UpgradeState.upgrading:
 		_spawn_bullet()
 
 func _has_active_bullet() -> bool:

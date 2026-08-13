@@ -30,6 +30,10 @@ extends CharacterBody3D
 var _direction: Vector3 = Vector3.FORWARD
 var _age: float = 0.0
 
+func _ready() -> void:
+	# 加入子弹分组，便于 Boss 死亡时销毁场上所有子弹
+	add_to_group("bullet")
+
 ## 设置飞行方向（由发射者调用）
 func setup(dir: Vector3) -> void:
 	_direction = dir.normalized()
