@@ -7,4 +7,4 @@ func _ready() -> void:
 
 func _on_bounced(hit: Node) -> void:
 	if _is_in_group_ancestor(hit, "bounce_wall"):
-		damage *= 1.25 + UpgradeState.orange_multiplier_bonus
+		damage *= 2 + UpgradeState.orange_multiplier_bonus

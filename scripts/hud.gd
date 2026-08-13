@@ -14,15 +14,15 @@ extends CanvasLayer
 
 ## 升级卡片池：随机抽取 3 张供玩家选择
 const UPGRADE_POOL: Array[Dictionary] = [
-	{"id": "red_base", "title": "红球初始伤害 +10"},
-	{"id": "red_hit", "title": "红球撞击增加伤害 +4"},
+	{"id": "red_base", "title": "红球初始伤害 +6"},
+	{"id": "red_hit", "title": "红球撞击增加伤害 +8"},
 	{"id": "orange_base", "title": "橙球初始伤害 +1"},
-	{"id": "orange_mult", "title": "橙球反弹倍率 +0.2"},
+	{"id": "orange_mult", "title": "橙球反弹倍率 +0.3"},
 	{"id": "blue_base", "title": "蓝球初始伤害 +1"},
 	{"id": "blue_dps", "title": "蓝球每秒伤害 +3"},
 	{"id": "heal", "title": "恢复 15 点血量"},
-	{"id": "board_width", "title": "板子宽度 +0.1"},
-	{"id": "board_height", "title": "板子高度 +0.1"},
+	{"id": "board_width", "title": "宽度 +0.1"},
+	{"id": "board_height", "title": "高度 +0.1"},
 ]
 
 var score: int = 0
@@ -140,13 +140,13 @@ func _on_upgrade_pressed(index: int) -> void:
 func _apply_upgrade(id: String) -> void:
 	match id:
 		"red_base":
-			UpgradeState.red_base_damage_bonus += 10.0
+			UpgradeState.red_base_damage_bonus += 6
 		"red_hit":
-			UpgradeState.red_hit_bonus += 4.0
+			UpgradeState.red_hit_bonus += 8
 		"orange_base":
 			UpgradeState.orange_base_damage_bonus += 1.0
 		"orange_mult":
-			UpgradeState.orange_multiplier_bonus += 0.2
+			UpgradeState.orange_multiplier_bonus += 0.3
 		"blue_base":
 			UpgradeState.blue_base_damage_bonus += 1.0
 		"blue_dps":
