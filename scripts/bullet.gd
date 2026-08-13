@@ -42,9 +42,10 @@ func _physics_process(delta: float) -> void:
 	var collision := move_and_collide(_direction * speed * delta)
 	if collision:
 		var hit := collision.get_collider()
+		var reflect := true
 		if _is_in_group_ancestor(hit, "player"):
-			# 撞玩家墙：无特殊效果（反弹）
-			pass
+			# 撞玩家墙：按玩家格挡状态决定是否反弹
+			reflect = _handle_player_hit(hit)
 		elif _is_in_group_ancestor(hit, "wall"):
 			# 撞 z+ 目标墙：对其造成伤害，并获得分数
 			var health_bar := _find_health_bar(hit)
@@ -54,10 +55,14 @@ func _physics_process(delta: float) -> void:
 			if hud != null and hud.has_method("add_score"):
 				hud.add_score(catch_score)
 		# 其余（上下左右四面墙）无特殊效果
-		# 沿碰撞法线反弹，速度大小保持不变
-		_direction = _direction.bounce(collision.get_normal())
-		# 通知子类：碰撞后伤害增强等
-		_on_bounced(hit)
+		if reflect:
+			# 沿碰撞法线反弹，速度大小保持不变
+			_direction = _direction.bounce(collision.get_normal())
+			# 通知子类：碰撞后伤害增强等
+			_on_bounced(hit)
+		else:
+			# 格挡失败：子弹穿透玩家板子，继续沿原方向飞行
+			global_position -= collision.get_normal() * 0.01
 	_age += delta
 	# 通知子类：每帧更新（如按时间的增强）
 	_on_tick(delta)
@@ -114,3 +119,13 @@ func _is_in_group_ancestor(from: Node, group: String) -> bool:
 			return true
 		node = node.get_parent()
 	return false
+
+## 撞到玩家墙时的处理：交给玩家的格挡判定，返回是否反弹子弹。
+## 玩家未在 parry 或不存在格挡逻辑时一律正常反弹。
+func _handle_player_hit(hit: Node) -> bool:
+	var node := hit
+	while node != null:
+		if node.is_in_group("player"):
+			return not node.has_method("try_parry_reflect") or node.try_parry_reflect()
+		node = node.get_parent()
+	return true

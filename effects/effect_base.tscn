@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/effect_player.gd" id="1_fxplayer"]
+
+[node name="EffectBase" type="Node2D"]
+process_mode = 3
+script = ExtResource("1_fxplayer")
+
+[node name="sounds" type="AudioStreamPlayer2D" parent="."]
+
+[node name="animator" type="AnimationPlayer" parent="."]
+
+[node name="texture" type="Sprite2D" parent="."]
+scale = Vector2(0.01, 0.01)
+
+[node name="particles" type="GPUParticles2D" parent="."]

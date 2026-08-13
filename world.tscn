@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://csjmp3eiyfcop"]
 
 [ext_resource type="Script" uid="uid://cnbewj4a2f7kl" path="res://scripts/third_person_camera.gd" id="1_3rdcam"]
-[ext_resource type="Script" path="res://scripts/sphere_controller.gd" id="1_sphere"]
-[ext_resource type="Script" path="res://scripts/health_bar.gd" id="1_healthbar"]
-[ext_resource type="Script" path="res://scripts/hud.gd" id="1_hud"]
+[ext_resource type="Script" uid="uid://bgoblieh6om2p" path="res://scripts/health_bar.gd" id="1_healthbar"]
+[ext_resource type="Script" uid="uid://ccltw3iy21bs3" path="res://scripts/hud.gd" id="1_hud"]
+[ext_resource type="Script" uid="uid://b6p382k5biaxt" path="res://scripts/sphere_controller.gd" id="1_sphere"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_player"]
 transparency = 1
@@ -16,16 +16,15 @@ transform = Transform3D(-0.8660254, -0.43301278, -0.24999999, 0, -0.4999999, 0.8
 shadow_enabled = true
 
 [node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=221766361]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 light_energy = 1.5
 omni_range = 15.0
 
 [node name="ZPlusWall" type="CSGBox3D" parent="." unique_id=1798404201 groups=["wall"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
-size = Vector3(10, 5, 1)
 use_collision = true
+size = Vector3(10, 5, 1)
 
-[node name="HealthBar" type="CanvasLayer" parent="ZPlusWall"]
+[node name="HealthBar" type="CanvasLayer" parent="ZPlusWall" unique_id=617263554]
 script = ExtResource("1_healthbar")
 max_health = 1000.0
 current_health = 1000.0
@@ -33,35 +32,33 @@ height_offset = 6.0
 
 [node name="TopWall" type="CSGBox3D" parent="." unique_id=1798404203 groups=["bounce_wall"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
-size = Vector3(10, 1, 10)
 use_collision = true
+size = Vector3(10, 1, 10)
 
 [node name="BottomWall" type="CSGBox3D" parent="." unique_id=1798404204 groups=["bounce_wall"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3, 0)
-size = Vector3(10, 1, 10)
 use_collision = true
+size = Vector3(10, 1, 10)
 
 [node name="LeftWall" type="CSGBox3D" parent="." unique_id=1798404205 groups=["bounce_wall"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0, 0)
-size = Vector3(1, 5, 10)
 use_collision = true
+size = Vector3(1, 5, 10)
 
 [node name="RightWall" type="CSGBox3D" parent="." unique_id=1798404206 groups=["bounce_wall"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0, 0)
-size = Vector3(1, 5, 10)
 use_collision = true
+size = Vector3(1, 5, 10)
 
 [node name="PlayerWall" type="CSGBox3D" parent="." unique_id=879389855 groups=["player"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
-material = SubResource("StandardMaterial3D_player")
-size = Vector3(2, 1, 0.5)
 use_collision = true
+size = Vector3(2, 1, 0.5)
+material = SubResource("StandardMaterial3D_player")
 script = ExtResource("1_sphere")
 
-[node name="HealthBar" type="CanvasLayer" parent="PlayerWall"]
+[node name="HealthBar" type="CanvasLayer" parent="PlayerWall" unique_id=28548322]
 script = ExtResource("1_healthbar")
-max_health = 100.0
-current_health = 100.0
 height_offset = 1.5
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1851537774 node_paths=PackedStringArray("target")]

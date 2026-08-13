@@ -31,6 +31,7 @@ var experience: int = 0
 
 var _score_label: Label
 var _exp_label: Label
+var _energy_label: Label
 var _die_label: Label
 var _upgrade_root: VBoxContainer
 var _upgrade_buttons: Array[Button] = []
@@ -55,6 +56,7 @@ func _ready() -> void:
 func _build_ui() -> void:
 	_score_label = _make_label("Score: 0", Vector2(20, 10), 32)
 	_exp_label = _make_label("EXP: 0", Vector2(20, 50), 32)
+	_energy_label = _make_label("Energy: 100", Vector2(20, 90), 32)
 	# 死亡提示：全屏居中的大红字，默认隐藏
 	_die_label = Label.new()
 	_die_label.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -96,6 +98,10 @@ func add_score(amount: int) -> void:
 func add_exp(amount: int) -> void:
 	experience += amount
 	_exp_label.text = "EXP: %d" % experience
+
+## 更新能量显示
+func set_energy(value: float) -> void:
+	_energy_label.text = "Energy: %d" % int(round(value))
 
 ## 玩家死亡：显示大红字提示
 func _on_player_died() -> void:
