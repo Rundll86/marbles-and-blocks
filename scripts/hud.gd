@@ -19,10 +19,11 @@ const UPGRADE_POOL: Array[Dictionary] = [
 	{"id": "orange_base", "title": "橙球初始伤害 +1"},
 	{"id": "orange_mult", "title": "橙球反弹倍率 +0.3"},
 	{"id": "blue_base", "title": "蓝球初始伤害 +1"},
-	{"id": "blue_dps", "title": "蓝球每秒伤害 +3"},
+	{"id": "blue_dps", "title": "蓝球每秒伤害 +16"},
 	{"id": "heal", "title": "恢复 15 点血量"},
-	{"id": "board_width", "title": "宽度 +0.1"},
-	{"id": "board_height", "title": "高度 +0.1"},
+	{"id": "move_speed", "title": "移动速度 +1"},
+	{"id": "board_width", "title": "弹板宽度 +0.25"},
+	{"id": "board_height", "title": "弹板高度 +0.25"},
 ]
 
 var score: int = 0
@@ -150,13 +151,15 @@ func _apply_upgrade(id: String) -> void:
 		"blue_base":
 			UpgradeState.blue_base_damage_bonus += 1.0
 		"blue_dps":
-			UpgradeState.blue_dps_bonus += 3.0
+			UpgradeState.blue_dps_bonus += 16.0
 		"heal":
 			_heal_player(15.0)
+		"move_speed":
+			_increase_move_speed(1.0)
 		"board_width":
-			_resize_player_board(Vector2(0.1, 0.0))
+			_resize_player_board(Vector2(0.25, 0.0))
 		"board_height":
-			_resize_player_board(Vector2(0.0, 0.1))
+			_resize_player_board(Vector2(0.0, 0.25))
 
 ## 恢复玩家血量
 func _heal_player(amount: float) -> void:
@@ -165,6 +168,12 @@ func _heal_player(amount: float) -> void:
 		var bar := player.get_node_or_null("HealthBar")
 		if bar != null and bar.has_method("take_damage"):
 			bar.take_damage(-amount)
+
+## 增加玩家移动速度
+func _increase_move_speed(amount: float) -> void:
+	var player := get_tree().get_first_node_in_group("player")
+	if player != null:
+		player.move_speed += amount
 
 ## 改变玩家板子的宽高
 func _resize_player_board(delta_size: Vector2) -> void:

@@ -5,7 +5,7 @@ extends Node3D
 ## 必须等上一颗子弹销毁后才能再发射。
 
 ## 移动速度（单位/秒）
-@export var move_speed: float = 9
+@export var move_speed: float = 6
 ## 三种子弹场景（红/橙/蓝），每次发射随机其一
 const BULLET_SCENES: Array[PackedScene] = [
 	preload("res://bullet_red.tscn"),
