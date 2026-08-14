@@ -39,6 +39,8 @@ var _upgrade_picks: Array[Dictionary] = []
 
 func _ready() -> void:
 	layer = 100
+	# 暂停期间 HUD 仍需处理（显示升级卡片、响应按钮点击）
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	_build_ui()
 	# 玩家血条归零：显示死亡提示
 	var player := get_tree().get_first_node_in_group("player")
@@ -108,8 +110,10 @@ func _on_player_died() -> void:
 	_die_label.text = die_text
 	_die_label.visible = true
 
-## Boss 死亡：获得经验值、重生、销毁子弹、弹出升级卡片
+## Boss 死亡：暂停游戏、获得经验值、重生、销毁子弹、弹出升级卡片
 func _on_boss_died() -> void:
+	# Boss 死亡瞬间暂停游戏，直到玩家选完升级选项
+	get_tree().paused = true
 	add_exp(exp_gain)
 	# 销毁场上所有子弹
 	for bullet in get_tree().get_nodes_in_group("bullet"):
@@ -139,7 +143,8 @@ func _show_upgrade_cards() -> void:
 func _on_upgrade_pressed(index: int) -> void:
 	_apply_upgrade(_upgrade_picks[index].id)
 	_upgrade_root.visible = false
-	# 选择完成，恢复发射并重新捕获鼠标
+	# 选择完成：恢复游戏、恢复发射并重新捕获鼠标
+	get_tree().paused = false
 	UpgradeState.upgrading = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
