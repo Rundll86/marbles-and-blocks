@@ -62,7 +62,7 @@ script = ExtResource("1_healthbar")
 height_offset = 1.5
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1851537774 node_paths=PackedStringArray("target")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 13.155308)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, -27.644077)
 current = true
 script = ExtResource("1_3rdcam")
 target = NodePath("../PlayerWall")

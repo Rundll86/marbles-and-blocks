@@ -27,8 +27,14 @@ extends CharacterBody3D
 ## 子弹 y 绝对值超过该值（米）即自动销毁
 @export var despawn_height: float = 10.0
 
+## 命中音效：撞玩家（非完美格挡）弹跳声、命中 boss 碎裂声
+const SFX_BASKETBALL: AudioStream = preload("res://resources/sounds/basketball.wav")
+const SFX_CRUNCH: AudioStream = preload("res://resources/sounds/crunch.wav")
+
 var _direction: Vector3 = Vector3.FORWARD
 var _age: float = 0.0
+## 本次撞玩家是否为完美格挡（由 _handle_player_hit 记录）
+var _hit_player_perfect: bool = false
 
 func _ready() -> void:
 	# 加入子弹分组，便于 Boss 死亡时销毁场上所有子弹
@@ -46,6 +52,9 @@ func _physics_process(delta: float) -> void:
 		if _is_in_group_ancestor(hit, "player"):
 			# 撞玩家墙：按玩家格挡状态决定是否反弹
 			reflect = _handle_player_hit(hit)
+			# 非完美格挡（含未格挡、非完美格挡失败）：播放弹跳音效
+			if not _hit_player_perfect:
+				_play_sfx(SFX_BASKETBALL)
 		elif _is_in_group_ancestor(hit, "wall"):
 			# 撞 z+ 目标墙：对其造成伤害，并获得分数
 			var health_bar := _find_health_bar(hit)
@@ -54,6 +63,8 @@ func _physics_process(delta: float) -> void:
 			var hud := get_tree().get_first_node_in_group("hud")
 			if hud != null and hud.has_method("add_score"):
 				hud.add_score(catch_score)
+			# 命中 boss：播放碎裂音效
+			_play_sfx(SFX_CRUNCH)
 		# 其余（上下左右四面墙）无特殊效果
 		if reflect:
 			# 沿碰撞法线反弹，速度大小保持不变
@@ -122,10 +133,27 @@ func _is_in_group_ancestor(from: Node, group: String) -> bool:
 
 ## 撞到玩家墙时的处理：交给玩家的格挡判定，返回是否反弹子弹。
 ## 玩家未在 parry 或不存在格挡逻辑时一律正常反弹。
+## 同时记录本次是否完美格挡到 _hit_player_perfect。
 func _handle_player_hit(hit: Node) -> bool:
+	_hit_player_perfect = false
 	var node := hit
 	while node != null:
 		if node.is_in_group("player"):
-			return not node.has_method("try_parry_reflect") or node.try_parry_reflect()
+			if not node.has_method("try_parry_reflect"):
+				return true
+			var reflect: bool = node.try_parry_reflect()
+			if node.has_method("was_perfect_parry"):
+				_hit_player_perfect = node.was_perfect_parry()
+			return reflect
 		node = node.get_parent()
 	return true
+
+## 在世界位置播放一次性空间音效，播完自动销毁
+func _play_sfx(stream: AudioStream) -> void:
+	var player := AudioStreamPlayer3D.new()
+	player.stream = stream
+	player.max_distance = 100.0
+	player.finished.connect(player.queue_free)
+	get_tree().current_scene.add_child(player)
+	player.global_position = global_position
+	player.play()

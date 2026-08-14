@@ -28,6 +28,8 @@ var energy: float = 100.0
 var is_parrying: bool = false
 ## 本次按住 parry 的持续时间（秒）
 var parry_time: float = 0.0
+## 最近一次 try_parry_reflect 是否为完美格挡
+var _perfect_parry_flag: bool = false
 
 var _pre_parry_size: Vector3 = Vector3.ZERO
 ## 三种子弹场景（红/橙/蓝），每次发射随机其一
@@ -98,15 +100,21 @@ func _spawn_bullet() -> void:
 ## 未在 parry：正常反弹；完美格挡（进入 parry 0.5 秒内）：必反弹并恢复全部能量；
 ## 非完美格挡：仅按概率反弹，无特殊效果。
 func try_parry_reflect() -> bool:
+	_perfect_parry_flag = false
 	if not is_parrying:
 		return true
 	if parry_time <= perfect_parry_window:
 		# 完美格挡：反弹并恢复所有能量，播放完美格挡特效
+		_perfect_parry_flag = true
 		energy = max_energy
 		_play_perfect_parry_fx()
 		return true
 	# 非完美格挡：仅按概率反弹
 	return randf() < parry_reflect_chance
+
+## 查询本次 try_parry_reflect 是否为完美格挡（供子弹决定播放哪种音效）
+func was_perfect_parry() -> bool:
+	return _perfect_parry_flag
 
 ## 在玩家板子位置播放完美格挡特效（屏幕空间：投影到玩家所在屏幕位置）
 func _play_perfect_parry_fx() -> void:
